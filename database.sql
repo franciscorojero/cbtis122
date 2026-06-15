@@ -1,0 +1,18 @@
+CREATE TABLE alumnos (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ncontrol CHAR(14) UNIQUE NOT NULL,
+    nombre VARCHAR(25) NOT NULL,
+    celular CHAR(10),
+    correo VARCHAR(50)
+);
+
+CREATE TABLE registros (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    idalumno INTEGER NOT NULL,
+    tipo VARCHAR(10) NOT NULL CHECK (tipo IN ('ENTRADA', 'SALIDA')),
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (idalumno)
+        REFERENCES alumnos(id)
+        ON DELETE RESTRICT
+);

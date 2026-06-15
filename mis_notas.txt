@@ -1,0 +1,56 @@
+Para trabajar localmente
+
+npm run dev
+o
+npm start
+
+La API funcionará en:
+
+http://localhost:3000
+
+-------------------------------------
+
+Para subir a Vercel
+
+Cuando hagas:
+
+git add .
+git commit -m "Nueva funcionalidad"
+git push origin main
+
+Vercel hará esto:
+
+index.js
+      ↓
+src/app.js
+      ↓
+Express
+
+y nunca ejecutará:
+
+app.listen()
+
+por lo que no habrá conflicto.
+
+--------------------------------------------------------------
+
+CREATE TABLE alumnos (
+	id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ 	nombre VARCHAR(25) NOT NULL,
+    apellido1 VARCHAR(25) NOT NULL,
+    apellido2 VARCHAR(25)  NULL,
+	celular CHAR(10) NULL,
+
+	correop VARCHAR(50) NULL,
+	correoi VARCHAR(50) NULL,
+    	
+	ncontrol CHAR(20) UNIQUE NOT NULL,
+    curp CHAR(18) NULL,
+   
+	foto_url VARCHAR(255),
+    qr_uuid UUID UNIQUE NOT NULL,
+    dentro_escuela BOOLEAN DEFAULT FALSE,
+    activo BOOLEAN DEFAULT TRUE
+);
+
+24308051220376

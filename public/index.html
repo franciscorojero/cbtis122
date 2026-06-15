@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alumnos API</title>
+
+<style>
+    *{
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+
+    body{
+        background-color: #f4f4f4;
+        padding: 30px;
+    }
+
+    .container{
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,.2);
+    }
+
+    h1{
+        text-align: center;
+        color: #333;
+    }
+
+    .formulario{
+        display: grid;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    input{
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    button{
+        padding: 12px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button:hover{
+        background: #0056b3;
+    }
+
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th{
+        background: #007bff;
+        color: white;
+        padding: 10px;
+    }
+
+    td{
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+
+    tr:nth-child(even){
+        background: #f2f2f2;
+    }
+
+    .mensaje{
+        margin-top: 10px;
+        font-weight: bold;
+        color: green;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Administración de Alumnos</h1>
+
+    <div class="formulario">
+        <input type="text" id="ncontrol" placeholder="Número de Control">
+        <input type="text" id="nombre" placeholder="Nombre">
+        <input type="email" id="correo" placeholder="Correo">
+        <input type="text" id="celular" placeholder="Celular">
+
+        <button onclick="guardarAlumno()">
+            Guardar Alumno
+        </button>
+
+        <div id="mensaje" class="mensaje"></div>
+    </div>
+
+    <button onclick="cargarAlumnos()">
+        Mostrar Alumnos
+    </button>
+
+    <br><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>No. Control</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Celular</th>
+            </tr>
+        </thead>
+        <tbody id="tablaAlumnos">
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+
+const URL = "http://localhost:3000/api/alumnos/";
+
+async function cargarAlumnos() {
+    try {
+
+        const respuesta = await fetch(URL);
+
+        const alumnos = await respuesta.json();
+
+        const tabla = document.getElementById("tablaAlumnos");
+
+        tabla.innerHTML = "";
+
+        alumnos.forEach(alumno => {
+
+            tabla.innerHTML += `
+                <tr>
+                    <td>${alumno.ncontrol}</td>
+                    <td>${alumno.nombre}</td>
+                    <td>${alumno.correo}</td>
+                    <td>${alumno.celular}</td>
+                </tr>
+            `;
+        });
+
+    } catch (error) {
+        alert("Error al obtener alumnos");
+        console.error(error);
+    }
+}
+
+async function guardarAlumno() {
+
+    const ncontrol = document.getElementById("ncontrol").value;
+    const nombre = document.getElementById("nombre").value;
+    const correo = document.getElementById("correo").value;
+    const celular = document.getElementById("celular").value;
+
+    if (!ncontrol || !nombre || !correo || !celular) {
+        alert("Todos los campos son obligatorios");
+        return;
+    }
+
+    const alumno = {
+        ncontrol,
+        nombre,
+        correo,
+        celular
+    };
+
+    try {
+
+        const respuesta = await fetch(URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(alumno)
+        });
+
+        if (!respuesta.ok) {
+            throw new Error("Error al guardar");
+        }
+
+        document.getElementById("mensaje").innerText =
+            "Alumno guardado correctamente";
+
+        document.getElementById("ncontrol").value = "";
+        document.getElementById("nombre").value = "";
+        document.getElementById("correo").value = "";
+        document.getElementById("celular").value = "";
+
+        cargarAlumnos();
+
+    } catch (error) {
+        alert("No se pudo guardar el alumno");
+        console.error(error);
+    }
+}
+
+window.onload = cargarAlumnos;
+
+</script>
+
+</body>
+</html>
