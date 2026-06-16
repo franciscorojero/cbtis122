@@ -14,7 +14,7 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     ssl: {
         rejectUnauthorized: true,
-        ca: fs.readFileSync(process.env.SSL_CA_PATH).toString()
+        ca: process.env.SSL_CA.replace(/\\n/g, '\n')
     }
 });
 
